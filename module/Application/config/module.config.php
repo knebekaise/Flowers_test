@@ -10,6 +10,7 @@ namespace Application;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
 return [
     'router' => [
@@ -44,6 +45,20 @@ return [
                     ],
                 ],
             ],
+            'group' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/group[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\GroupController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
             'application' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -58,7 +73,8 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class
+            Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
+            Controller\GroupController::class => Controller\Factory\GroupControllerFactory::class,
         ],
     ],
     'service_manager' => [
@@ -66,6 +82,7 @@ return [
             \Zend\Authentication\AuthenticationService::class => Service\Factory\AuthenticationServiceFactory::class,
             Service\AuthAdapter::class => Service\Factory\AuthAdapterFactory::class,
             Service\AuthManager::class => Service\Factory\AuthManagerFactory::class,
+            Service\GroupManager::class => Service\Factory\GroupManagerFactory::class,
         ],
     ],
     'access_filter' => [
@@ -103,5 +120,19 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+    ],
+    'doctrine' => [
+        'driver' => [
+            __NAMESPACE__ . '_driver' => [
+                'class' => AnnotationDriver::class,
+                'cache' => 'array',
+                'paths' => [__DIR__ . '/../src/Entity']
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                ]
+            ]
+        ]
     ],
 ];

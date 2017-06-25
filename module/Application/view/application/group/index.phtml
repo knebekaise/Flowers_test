@@ -1,0 +1,50 @@
+<?php
+$this->headTitle('Groups');
+
+?>
+
+<h1>Manage Groups</h1>
+
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('group', ['action'=>'create']); ?>">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Group
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>Group ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+    </tr>
+
+    <?php foreach ($groups as $group) {
+        $viewUrl = $this->url('group', ['action' => 'view', 'id' => $group->getId()]);
+        $editUrl = $this->url('group', ['action' => 'edit', 'id' => $group->getId()]);
+        $deleteUrl = $this->url('group', ['action' => 'delete', 'id' => $group->getId()]);
+    ?><tr>
+        <td><?= $this->escapeHtml($group->getId()); ?></td>
+        <td>
+            <a href="<?= $viewUrl ?>">
+                <?= $this->escapeHtml($group->getName()); ?>
+            </a>
+        </td>
+        <td>
+            <a href="<?= $viewUrl ?>" title="View">
+                <span class="glyphicon glyphicon-eye-open"></span>
+            </a>
+            <a href="<?= $editUrl ?>" title="Edit">
+                <span class="glyphicon glyphicon glyphicon-pencil"></span>
+            </a>
+            <a href="<?= $deleteUrl ?>" title="Delete">
+                <span class="glyphicon glyphicon glyphicon-trash"></span>
+            </a>
+        </td>
+    </tr>
+
+    <?php }?>
+
+</table>
+

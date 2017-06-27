@@ -2,10 +2,13 @@
 
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Application\Form\GroupForm;
 use Application\Entity\Group;
+use Application\Form\GroupForm;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Paginator\Paginator;
+use Zend\View\Model\ViewModel;
 
 // use Application\Repository\GroupRepository;
 
@@ -35,12 +38,26 @@ class GroupController extends AbstractActionController
      */
     public function indexAction()
     {
-        $groups = $this->entityManager
+        $params = $this->params()->fromQuery();
+
+        $orderBy = isset($params['orderBy']) ? $params['orderBy'] : 'groupId';
+        $order = isset($params['order']) ? $params['order'] : 'asc';
+        $page = isset($params['page']) ? $params['page'] : 1;
+        $perPage = isset($params['perPage']) ? $params['perPage'] : 1;
+
+        $query = $this->entityManager
             ->getRepository(Group::class)
-            ->findBy([], ['groupId'=>'ASC']);
-        
+            ->findForPagination([], [$orderBy => $order]);
+
+        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
+        $paginator = new Paginator($adapter);
+        $paginator->setDefaultItemCountPerPage($perPage);
+        $paginator->setCurrentPageNumber($page);
+
         return new ViewModel([
-            'groups' => $groups,
+            'groups' => $paginator,
+            'order' => $order,
+            'orderBy' => $orderBy,
         ]);
     }
 
@@ -53,7 +70,7 @@ class GroupController extends AbstractActionController
         if (empty($group)) {
             return;
         }
-                
+
         return new ViewModel([
             'group' => $group,
         ]);
@@ -70,17 +87,17 @@ class GroupController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             // Fill in the form with POST data
             $data = $this->params()->fromPost();
-            
+
             $form->setData($data);
-            
+
             // Validate form
             if ($form->isValid()) {
                 // Get filtered and validated data
                 $data = $form->getData();
-                
+
                 // Add group.
                 $group = $this->groupManager->addGroup($data);
-                
+
                 // Redirect to "view" page
                 return $this->redirect()->toRoute(
                     'group',
@@ -103,25 +120,25 @@ class GroupController extends AbstractActionController
         if (empty($group)) {
             return;
         }
-        
+
         // Create group form
         $form = new GroupForm('update', $this->entityManager, $group);
-        
+
         // Check if group has submitted the form
         if ($this->getRequest()->isPost()) {
             // Fill in the form with POST data
             $data = $this->params()->fromPost();
-            
+
             $form->setData($data);
-            
+
             // Validate form
             if ($form->isValid()) {
                 // Get filtered and validated data
                 $data = $form->getData();
-                
+
                 // Update the group.
                 $this->groupManager->updateGroup($group, $data);
-                
+
                 // Redirect to "view" page
                 return $this->redirect()->toRoute(
                     'group',
@@ -133,7 +150,7 @@ class GroupController extends AbstractActionController
                     'name'=>$group->getName(),
                 ));
         }
-        
+
         return new ViewModel(array(
             'group' => $group,
             'form' => $form
@@ -149,7 +166,7 @@ class GroupController extends AbstractActionController
         if (empty($group)) {
             return;
         }
-        
+
         $this->groupManager->removeGroup($group);
 
         // Redirect the user to "index" page.
@@ -163,7 +180,7 @@ class GroupController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;
         }
-        
+
         $group = $this->entityManager
             ->getRepository(Group::class)
             ->find($id);

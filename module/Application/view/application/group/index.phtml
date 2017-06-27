@@ -1,6 +1,10 @@
 <?php
 $this->headTitle('Groups');
-
+if ($order == 'asc') {
+    $orderClass = 'glyphicon-triangle-bottom';
+} else {
+    $orderClass = 'glyphicon-triangle-top';
+}
 ?>
 
 <h1>Manage Groups</h1>
@@ -15,8 +19,40 @@ $this->headTitle('Groups');
 <table class="table table-striped">
 
    <tr>
-        <th>Group ID</th>
-        <th>Name</th>
+        <th>
+            <a href="<?=$this->url(
+                'group',
+                [
+                    'action' => 'index',
+                ],
+                [
+                    'query' => [
+                        'orderBy' => 'groupId',
+                        'order' => ($orderBy == 'groupId' && $order == 'asc') ? 'desc' : 'asc',
+                    ],
+                ]
+            )?>">Group ID <?php
+                if ($orderBy == 'groupId') {
+                    ?><span class="glyphicon <?=$orderClass?>"></span><?php
+                } ?></a>
+        </th>
+        <th>
+            <a href="<?=$this->url(
+                'group',
+                [
+                    'action' => 'index',
+                ],
+                [
+                    'query' => [
+                        'orderBy' => 'name',
+                        'order' => ($orderBy == 'name' && $order == 'asc') ? 'desc' : 'asc',
+                    ],
+                ]
+            )?>">Name <?php
+                if ($orderBy == 'name') {
+                    ?><span class="glyphicon <?=$orderClass?>"></span><?php
+                } ?></a>
+        </th>
         <th>Actions</th>
     </tr>
 
@@ -46,5 +82,20 @@ $this->headTitle('Groups');
 
     <?php }?>
 
-</table>
+</table><?php
 
+echo $this->paginationControl(
+    $groups,
+    'Sliding',
+    'application/partial/paginator',
+    [
+        'route' => 'group',
+        'action' => 'index',
+
+        'force_canonical' => true,
+        'query' => [
+            'orderBy' => $orderBy,
+            'order' => $order,
+        ],
+    ]
+);

@@ -1,0 +1,54 @@
+<?php
+$this->headTitle('Consumers');
+
+?>
+
+<h1>Manage Consumers</h1>
+
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('consumer', ['action'=>'create']); ?>">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Consumer
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>Consumer ID</th>
+        <th>Login</th>
+        <th>Password</th>
+        <th>Email</th>
+        <th>Expiration Date Time</th>
+        <th>Group</th>
+        <th>Actions</th>
+    </tr>
+
+    <?php foreach ($consumers as $consumer) {
+        $viewUrl = $this->url('consumer', ['action' => 'view', 'id' => $consumer->getId()]);
+        $editUrl = $this->url('consumer', ['action' => 'edit', 'id' => $consumer->getId()]);
+        $deleteUrl = $this->url('consumer', ['action' => 'delete', 'id' => $consumer->getId()]);
+    ?><tr>
+        <td><?= $this->escapeHtml($consumer->getId()); ?></td>
+        <td><?= $this->escapeHtml($consumer->getLogin()); ?></td>
+        <td><?= $this->escapeHtml($consumer->getPassword()); ?></td>
+        <td><?= $this->escapeHtml($consumer->getEmail()); ?></td>
+        <td><?= $this->escapeHtml($consumer->getExpirationDateTime()); ?></td>
+        <td><?= $this->escapeHtml($consumer->getGroup()->getName()); ?></td>
+        <td>
+            <a href="<?= $viewUrl ?>" title="View">
+                <span class="glyphicon glyphicon-eye-open"></span>
+            </a>
+            <a href="<?= $editUrl ?>" title="Edit">
+                <span class="glyphicon glyphicon glyphicon-pencil"></span>
+            </a>
+            <a href="<?= $deleteUrl ?>" title="Delete">
+                <span class="glyphicon glyphicon glyphicon-trash"></span>
+            </a>
+        </td>
+    </tr>
+
+    <?php }?>
+
+</table>
+

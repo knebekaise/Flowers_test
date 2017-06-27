@@ -59,6 +59,20 @@ return [
                     ],
                 ],
             ],
+            'consumer' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/consumer[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\ConsumerController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
             'application' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -75,6 +89,7 @@ return [
         'factories' => [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\GroupController::class => Controller\Factory\GroupControllerFactory::class,
+            Controller\ConsumerController::class => Controller\Factory\ConsumerControllerFactory::class,
         ],
     ],
     'service_manager' => [
@@ -83,6 +98,7 @@ return [
             Service\AuthAdapter::class => Service\Factory\AuthAdapterFactory::class,
             Service\AuthManager::class => Service\Factory\AuthManagerFactory::class,
             Service\GroupManager::class => Service\Factory\GroupManagerFactory::class,
+            Service\ConsumerManager::class => Service\Factory\ConsumerManagerFactory::class,
         ],
     ],
     'access_filter' => [

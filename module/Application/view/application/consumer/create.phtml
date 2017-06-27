@@ -1,0 +1,74 @@
+<?php
+$this->headTitle('Create Consumer');
+
+$form = $this->form;
+$form->get('login')->setAttributes([
+        'class'=>'form-control',
+        'placeholder'=>'Enter consumer login',
+    ]);
+$form->get('password')->setAttributes([
+        'class'=>'form-control',
+        'placeholder'=>'Enter consumer password',
+    ]);
+$form->get('email')->setAttributes([
+        'class'=>'form-control',
+        'placeholder'=>'Enter consumer email',
+    ]);
+
+$form->get('expirationDateTime')->setAttributes([
+        'class'=>'form-control',
+        'placeholder'=>'Enter Expiration Date Time',
+    ]);
+$form->get('groupId')->setAttributes([
+        'class'=>'form-control',
+    ]);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->get('submit')->setValue('Save');
+$form->prepare();
+?>
+
+<h1>Create Consumer</h1>
+
+<p>
+    Please fill out the following form and click the *Save* button.
+</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('login')); ?>
+            <?= $this->formElement($form->get('login')); ?>
+            <?= $this->formElementErrors($form->get('login')); ?>
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('password')); ?>
+            <?= $this->formElement($form->get('password')); ?>
+            <?= $this->formElementErrors($form->get('password')); ?>
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('email')); ?>
+            <?= $this->formElement($form->get('email')); ?>
+            <?= $this->formElementErrors($form->get('email')); ?>
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('expirationDateTime')); ?>
+            <?= $this->formElement($form->get('expirationDateTime')); ?>
+            <?= $this->formElementErrors($form->get('expirationDateTime')); ?>
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('groupId')); ?>
+            <?= $this->formElement($form->get('groupId')); ?>
+            <?= $this->formElementErrors($form->get('groupId')); ?>
+        </div>
+
+        <?= $this->formElement($form->get('submit')); ?>
+
+        <?= $this->form()->closeTag(); ?>
+    </div>
+</div>

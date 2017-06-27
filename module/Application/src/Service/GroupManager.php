@@ -46,7 +46,7 @@ class GroupManager
     /**
      * This method updates data of an existing group.
      */
-    public function updategroup($group, $data)
+    public function updateGroup($group, $data)
     {
         $group->setName($data['name']);
 

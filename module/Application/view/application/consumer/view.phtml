@@ -1,0 +1,51 @@
+<?php
+$this->headTitle('View Consumer');
+
+?>
+
+<h1>View Consumer</h1>
+
+<p>
+    <a class="btn btn-default" href="
+        <?= $this->url('consumer', ['action'=>'edit', 'id' => $consumer->getId()]); ?>">
+        Update
+    </a>
+    <a class="btn btn-default" href="
+        <?= $this->url('consumer', ['action'=>'delete', 'id' => $consumer->getId()]); ?>">
+        Delete
+    </a>
+</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table table-striped table-bordered">
+             <tr>
+                <th>Consumer ID:</th>
+                <td><?= $this->escapeHtml($consumer->getId()) ?></th>
+            </tr>
+            <tr>
+                <th>Login:</th>
+                <td><?= $this->escapeHtml($consumer->getLogin()) ?></th>
+            </tr>
+            <tr>
+                <th>Password:</th>
+                <td><?= $this->escapeHtml($consumer->getPassword()) ?></th>
+            </tr>
+            <tr>
+                <th>Group:</th>
+                <td><?= $this->escapeHtml($consumer->getGroup()->getName()) ?></th>
+            </tr>
+
+            <tr>
+                <th>Email:</th>
+                <td><?= $this->escapeHtml($consumer->getEmail()) ?></th>
+            </tr>
+            <tr>
+                <th>ExpirationDateTime:</th>
+                <td><?= $this->escapeHtml($consumer->getExpirationDateTime()) ?></th>
+            </tr>
+
+
+        </table>
+    </div>
+</div>

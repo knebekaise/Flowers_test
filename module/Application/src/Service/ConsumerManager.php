@@ -21,11 +21,18 @@ class ConsumerManager
     private $entityManager;
 
     /**
+     * Image manager.
+     * @var Application\Service\ImageManager;
+     */
+    private $imageManager;
+
+    /**
      * Constructor.
      */
-    public function __construct($entityManager)
+    public function __construct($entityManager, $imageManager)
     {
         $this->entityManager = $entityManager;
+        $this->imageManager = $imageManager;
     }
 
     /**
@@ -40,6 +47,11 @@ class ConsumerManager
         $consumer->setEmail($data['email']);
         $consumer->setExpirationDateTime($data['expirationDateTime']);
 
+        if (!empty($data['avatar']['name'])) {
+            $extension = $this->imageManager->getFileExtension($data['avatar']['name']);
+            $consumer->setImageExtension($extension);
+        }
+
         $group = $this->entityManager
             ->getRepository(Group::class)
             ->find($data['groupId']);
@@ -51,6 +63,16 @@ class ConsumerManager
 
         // Apply changes to database.
         $this->entityManager->flush();
+
+        if (isset($data['avatar']['tmp_name'])
+            && $consumer->getId()
+            && $consumer->getImageExtension()
+        ) {
+            $this->imageManager->moveUploadedFile(
+                $data['avatar']['tmp_name'],
+                $consumer->getAvatarFileName()
+            );
+        }
     }
 
     /**
@@ -62,9 +84,23 @@ class ConsumerManager
         $consumer->setEmail($data['email']);
         $consumer->setGroupId($data['groupId']);
         $consumer->setExpirationDateTime($data['expirationDateTime']);
+        if (!empty($data['avatar']['name'])) {
+            $extension = $this->imageManager->getFileExtension($data['avatar']['name']);
+            $consumer->setImageExtension($extension);
+        }
 
         // Apply changes to database.
         $this->entityManager->flush();
+
+        if (isset($data['avatar']['tmp_name'])
+            && $consumer->getId()
+            && $consumer->getImageExtension()
+        ) {
+            $this->imageManager->moveUploadedFile(
+                $data['avatar']['tmp_name'],
+                $consumer->getAvatarFileName()
+            );
+        }
 
         return true;
     }

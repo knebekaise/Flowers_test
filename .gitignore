@@ -3,5 +3,6 @@ vendor/
 config/development.config.php
 config/local.php
 data/cache/*
+data/avatars/*
 !data/cache/.gitkeep
 phpunit.xml

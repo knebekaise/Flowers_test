@@ -73,13 +73,17 @@ return [
                     ],
                 ],
             ],
-            'application' => [
+            'images' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/application[/:action]',
+                    'route'    => '/avatar[/:width[/:file]]',
+                    'constraints' => [
+                        'width' => '[0-9]+',
+                        'file' => '[0-9]+\.[jpg|png]+',
+                    ],
                     'defaults' => [
-                        'controller' => Controller\IndexController::class,
-                        'action'     => 'index',
+                        'controller'    => Controller\ImageController::class,
+                        'action'        => 'file',
                     ],
                 ],
             ],
@@ -90,6 +94,7 @@ return [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\GroupController::class => Controller\Factory\GroupControllerFactory::class,
             Controller\ConsumerController::class => Controller\Factory\ConsumerControllerFactory::class,
+            Controller\ImageController::class => Controller\Factory\ImageControllerFactory::class,
         ],
     ],
     'service_manager' => [
@@ -99,6 +104,7 @@ return [
             Service\AuthManager::class => Service\Factory\AuthManagerFactory::class,
             Service\GroupManager::class => Service\Factory\GroupManagerFactory::class,
             Service\ConsumerManager::class => Service\Factory\ConsumerManagerFactory::class,
+            Service\ImageManager::class => InvokableFactory::class,
         ],
     ],
     'access_filter' => [

@@ -24,25 +24,35 @@ $this->headTitle('View Consumer');
                 <td><?= $this->escapeHtml($consumer->getId()) ?></th>
             </tr>
             <tr>
+                <th>Avatar:</th>
+                <td><?php
+                    if ($consumer->getAvatarFileName()) {
+                        ?><img src="<?=$this->url('images', ['width' => 300, 'file' => $consumer->getAvatarFileName()]) ?>"/><?php
+                    } else {
+                        ?>Not set<?php
+                    }
+                ?></td>
+            </tr>
+            <tr>
                 <th>Login:</th>
-                <td><?= $this->escapeHtml($consumer->getLogin()) ?></th>
+                <td><?= $this->escapeHtml($consumer->getLogin()) ?></td>
             </tr>
             <tr>
                 <th>Password:</th>
-                <td><?= $this->escapeHtml($consumer->getPassword()) ?></th>
+                <td><?= $this->escapeHtml($consumer->getPassword()) ?></td>
             </tr>
             <tr>
                 <th>Group:</th>
-                <td><?= $this->escapeHtml($consumer->getGroup()->getName()) ?></th>
+                <td><?= $this->escapeHtml($consumer->getGroup()->getName()) ?></td>
             </tr>
 
             <tr>
                 <th>Email:</th>
-                <td><?= $this->escapeHtml($consumer->getEmail()) ?></th>
+                <td><?= $this->escapeHtml($consumer->getEmail()) ?></td>
             </tr>
             <tr>
                 <th>ExpirationDateTime:</th>
-                <td><?= $this->escapeHtml($consumer->getExpirationDateTime()) ?></th>
+                <td><?= $this->escapeHtml($consumer->getExpirationDateTime()) ?></td>
             </tr>
 
 

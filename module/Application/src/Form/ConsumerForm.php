@@ -10,6 +10,7 @@ use Zend\InputFilter\InputFilter;
  */
 class ConsumerForm extends Form
 {
+    const EXPIRATION_DATE_FORMAT = 'YYYY-MM-DD HH:mm';
     /**
      * Current group.
      * @var Application\Entity\Consumer
@@ -41,6 +42,9 @@ class ConsumerForm extends Form
 
         // Set POST method for this form
         $this->setAttribute('method', 'post');
+
+        // Set binary content encoding
+        $this->setAttribute('enctype', 'multipart/form-data');
 
         $this->groupRepository = $groupRepository;
         $this->scenario = $scenario;
@@ -97,13 +101,30 @@ class ConsumerForm extends Form
 
         // Add "expirationDateTime" field
         $this->add([
-            'type'  => 'text',
+            'type' => 'Datetimepicker\Form\Element\Datetimepicker',
             'name' => 'expirationDateTime',
+            'options' => [
+                'settings' => [
+                    'id' => 'expirationDateTime',
+                    'icon' => true,
+                    'datepicker' => [
+                        'format' => self::EXPIRATION_DATE_FORMAT,
+                    ],
+                ],
+                'label' => 'Consumer Expiration Date Time',
+            ]
+
+        ]);
+
+        // Add "avatar" field
+        $this->add([
+            'type'  => 'file',
+            'name' => 'avatar',
             'attributes' => [
-                'id' => 'expirationDateTime'
+                'id' => 'avatar'
             ],
             'options' => [
-                'label' => 'Consumer Expiration Date Time',
+                'label' => 'Upload Avatar',
             ],
         ]);
 
@@ -218,16 +239,37 @@ class ConsumerForm extends Form
         $inputFilter->add([
             'name'     => 'expirationDateTime',
             'required' => true,
-            'filters'  => [
-                ['name' => 'Int'],
-            ],
             'validators' => [
                 [
-                    'name'    => 'Between',
+                    'name'    => 'DateTime',
                     'options' => [
-                        'min' => 1,
-                        'max' => 100,
+                        'pattern' => self::EXPIRATION_DATE_FORMAT,
                     ],
+                ],
+            ],
+        ]);
+
+        $inputFilter->add([
+            'type'     => 'Zend\InputFilter\FileInput',
+            'name'     => 'avatar',
+            'required' => false,
+            'validators' => [
+                ['name'    => 'FileUploadFile'],
+                [
+                    'name'    => 'FileMimeType',
+                    'options' => [
+                        'mimeType'  => ['image/jpeg', 'image/png']
+                    ]
+                ],
+                ['name'    => 'FileIsImage'],
+                [
+                    'name'    => 'FileImageSize',
+                    'options' => [
+                        'minWidth'  => 128,
+                        'minHeight' => 128,
+                        'maxWidth'  => 4096,
+                        'maxHeight' => 4096
+                    ]
                 ],
             ],
         ]);

@@ -27,6 +27,19 @@ class ConsumerRepository extends EntityRepository
 
         // Apply filters
         if (!empty($filter)) {
+            if (!empty($filter['expirationDateTime'])) {
+                $expirationDate = new \DateTime($filter['expirationDateTime']);
+                $startTimestamp = $expirationDate->getTimestamp();
+                $expirationDate->modify('+1 day');
+                $endTimestamp = $expirationDate->getTimestamp();
+                $queryBuilder = $queryBuilder
+                        ->andWhere('c.expirationDateTime >= :startDate')
+                        ->andWhere('c.expirationDateTime < :endDate')
+                        ->setParameter(':startDate', $startTimestamp)
+                        ->setParameter(':endDate', $endTimestamp);
+                unset($filter['expirationDateTime']);
+            }
+
             $paramIndex = 0;
             foreach ($filter as $column => $value) {
                 if (!empty($value)) {

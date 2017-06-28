@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Consumer
 {
+    const EXPIRATION_DATE_FORMAT = 'Y-m-d H:i';
     /**
      * @ORM\Id
      * @ORM\Column(name="consumerId")
@@ -168,7 +169,9 @@ class Consumer
      */
     public function getExpirationDateTime()
     {
-        return $this->expirationDateTime;
+        $date = new \DateTime();
+        $date->setTimestamp($this->expirationDateTime);
+        return $date->format(self::EXPIRATION_DATE_FORMAT);
     }
 
     /**
@@ -177,6 +180,34 @@ class Consumer
      */
     public function setExpirationDateTime($expirationDateTime)
     {
-        $this->expirationDateTime = $expirationDateTime;
+        $date = new \Datetime($expirationDateTime);
+        $this->expirationDateTime = $date->getTimestamp();
+    }
+
+    /**
+     * Returns imageExtention.
+     * @return string
+     */
+    public function getImageExtension()
+    {
+        return $this->imageExtention;
+    }
+
+    /**
+     * Sets imageExtention.
+     * @param string $expirationDateTime
+     */
+    public function setImageExtension($imageExtention)
+    {
+        $this->imageExtention = $imageExtention;
+    }
+
+    public function getAvatarFileName()
+    {
+        if ($this->getImageExtension()) {
+            return $this->getId() . '.' . $this->getImageExtension();
+        } else {
+            return '';
+        }
     }
 }

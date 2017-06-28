@@ -28,10 +28,17 @@ class ConsumerController extends AbstractActionController
      */
     private $consumerManager;
 
-    public function __construct($entityManager, $consumerManager)
+    /**
+     * Image manager
+     * @var Application\Service\ImageManager
+     */
+    private $imageManager;
+
+    public function __construct($entityManager, $consumerManager, $imageManager)
     {
         $this->entityManager = $entityManager;
         $this->consumerManager = $consumerManager;
+        $this->imageManager = $imageManager;
     }
 
     /**
@@ -45,7 +52,7 @@ class ConsumerController extends AbstractActionController
         $orderBy = isset($params['orderBy']) ? $params['orderBy'] : 'consumerId';
         $order = isset($params['order']) ? $params['order'] : 'asc';
         $page = isset($params['page']) ? $params['page'] : 1;
-        $perPage = isset($params['perPage']) ? $params['perPage'] : 2;
+        $perPage = isset($params['perPage']) ? $params['perPage'] : 10;
 
         $groupRepository = $this->entityManager
             ->getRepository(Group::class);
@@ -84,6 +91,7 @@ class ConsumerController extends AbstractActionController
 
         return new ViewModel([
             'consumer' => $consumer,
+            'baseImagePath' => $this->imageManager->getSaveToDir(),
         ]);
     }
 
@@ -99,7 +107,12 @@ class ConsumerController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             // Fill in the form with POST data
-            $data = $this->params()->fromPost();
+
+            $request = $this->getRequest();
+            $data = array_merge_recursive(
+                $request->getPost()->toArray(),
+                $request->getFiles()->toArray()
+            );
 
             $form->setData($data);
 
@@ -142,7 +155,11 @@ class ConsumerController extends AbstractActionController
         // Check if consumer has submitted the form
         if ($this->getRequest()->isPost()) {
             // Fill in the form with POST data
-            $data = $this->params()->fromPost();
+            $request = $this->getRequest();
+            $data = array_merge_recursive(
+                $request->getPost()->toArray(),
+                $request->getFiles()->toArray()
+            );
 
             $form->setData($data);
 

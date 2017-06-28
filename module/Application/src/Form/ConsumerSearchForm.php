@@ -10,6 +10,7 @@ use Zend\InputFilter\InputFilter;
  */
 class ConsumerSearchForm extends Form
 {
+    const EXPIRATION_DATE_FORMAT = 'YYYY-MM-DD';
     /**
      * Group repository for select field
      * @var Application\Repository\GroupRepository
@@ -37,15 +38,21 @@ class ConsumerSearchForm extends Form
      */
     protected function addElements()
     {
+        // Add "expirationDateTime" field
         $this->add([
-            'type'  => 'text',
+            'type' => 'Datetimepicker\Form\Element\Datetimepicker',
             'name' => 'expirationDateTime',
-            'attributes' => [
-                'id' => 'expirationDateTime'
-            ],
             'options' => [
+                'settings' => [
+                    'id' => 'expirationDateTime',
+                    'icon' => true,
+                    'datepicker' => [
+                        'format' => self::EXPIRATION_DATE_FORMAT,
+                    ],
+                ],
                 'label' => 'Consumer Expiration Date Time',
-            ],
+            ]
+
         ]);
 
         // Add "groupId" field
@@ -87,15 +94,6 @@ class ConsumerSearchForm extends Form
         $inputFilter->add([
             'name'     => 'expirationDateTime',
             'required' => false,
-            'validators' => [
-                [
-                    'name'    => 'Between',
-                    'options' => [
-                        'min' => 1,
-                        'max' => 100,
-                    ],
-                ],
-            ],
         ]);
 
         $inputFilter->add([

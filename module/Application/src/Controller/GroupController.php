@@ -43,7 +43,7 @@ class GroupController extends AbstractActionController
         $orderBy = isset($params['orderBy']) ? $params['orderBy'] : 'groupId';
         $order = isset($params['order']) ? $params['order'] : 'asc';
         $page = isset($params['page']) ? $params['page'] : 1;
-        $perPage = isset($params['perPage']) ? $params['perPage'] : 1;
+        $perPage = isset($params['perPage']) ? $params['perPage'] : 10;
 
         $query = $this->entityManager
             ->getRepository(Group::class)

@@ -1,6 +1,11 @@
 <?php
 $this->headTitle('Consumers');
 
+if ($order == 'asc') {
+    $orderClass = 'glyphicon-triangle-bottom';
+} else {
+    $orderClass = 'glyphicon-triangle-top';
+}
 ?>
 
 <h1>Manage Consumers</h1>
@@ -15,12 +20,83 @@ $this->headTitle('Consumers');
 <table class="table table-striped">
 
    <tr>
-        <th>Consumer ID</th>
-        <th>Login</th>
-        <th>Password</th>
-        <th>Email</th>
-        <th>Expiration Date Time</th>
-        <th>Group</th>
+        <th>
+            <a href="<?=$this->url(
+                'consumer',
+                [
+                    'action' => 'index',
+                ],
+                [
+                    'query' => [
+                        'orderBy' => 'consumerId',
+                        'order' => ($orderBy == 'consumerId' && $order == 'asc') ? 'desc' : 'asc',
+                    ],
+                ]
+            )?>">Consumer ID <?php
+                if ($orderBy == 'consumerId') {
+                    ?><span class="glyphicon <?=$orderClass?>"></span><?php
+                } ?></a>
+        </th>
+        <th><a href="<?=$this->url(
+                'consumer',
+                [
+                    'action' => 'index',
+                ],
+                [
+                    'query' => [
+                        'orderBy' => 'login',
+                        'order' => ($orderBy == 'login' && $order == 'asc') ? 'desc' : 'asc',
+                    ],
+                ]
+            )?>">Login <?php
+                if ($orderBy == 'login') {
+                    ?><span class="glyphicon <?=$orderClass?>"></span><?php
+                } ?></a></th>
+        <th><a href="<?=$this->url(
+                'consumer',
+                [
+                    'action' => 'index',
+                ],
+                [
+                    'query' => [
+                        'orderBy' => 'email',
+                        'order' => ($orderBy == 'email' && $order == 'asc') ? 'desc' : 'asc',
+                    ],
+                ]
+            )?>">Email <?php
+                if ($orderBy == 'email') {
+                    ?><span class="glyphicon <?=$orderClass?>"></span><?php
+                } ?></a></th>
+        <th><a href="<?=$this->url(
+                'consumer',
+                [
+                    'action' => 'index',
+                ],
+                [
+                    'query' => [
+                        'orderBy' => 'expirationDateTime',
+                        'order' => ($orderBy == 'expirationDateTime' && $order == 'asc') ? 'desc' : 'asc',
+                    ],
+                ]
+            )?>">Expiration Date Time <?php
+                if ($orderBy == 'expirationDateTime') {
+                    ?><span class="glyphicon <?=$orderClass?>"></span><?php
+                } ?></a></th>
+        <th><a href="<?=$this->url(
+                'consumer',
+                [
+                    'action' => 'index',
+                ],
+                [
+                    'query' => [
+                        'orderBy' => 'group',
+                        'order' => ($orderBy == 'group' && $order == 'asc') ? 'desc' : 'asc',
+                    ],
+                ]
+            )?>">Group <?php
+                if ($orderBy == 'group') {
+                    ?><span class="glyphicon <?=$orderClass?>"></span><?php
+                } ?></a></th>
         <th>Actions</th>
     </tr>
 
@@ -31,7 +107,6 @@ $this->headTitle('Consumers');
     ?><tr>
         <td><?= $this->escapeHtml($consumer->getId()); ?></td>
         <td><?= $this->escapeHtml($consumer->getLogin()); ?></td>
-        <td><?= $this->escapeHtml($consumer->getPassword()); ?></td>
         <td><?= $this->escapeHtml($consumer->getEmail()); ?></td>
         <td><?= $this->escapeHtml($consumer->getExpirationDateTime()); ?></td>
         <td><?= $this->escapeHtml($consumer->getGroup()->getName()); ?></td>
@@ -50,5 +125,21 @@ $this->headTitle('Consumers');
 
     <?php }?>
 
-</table>
+</table><?php
+
+echo $this->paginationControl(
+    $consumers,
+    'Sliding',
+    'application/partial/paginator',
+    [
+        'route' => 'consumer',
+        'action' => 'index',
+
+        'force_canonical' => true,
+        'query' => [
+            'orderBy' => $orderBy,
+            'order' => $order,
+        ],
+    ]
+);
 

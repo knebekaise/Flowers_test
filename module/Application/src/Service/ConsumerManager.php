@@ -3,6 +3,7 @@
 namespace Application\Service;
 
 use Application\Entity\Consumer;
+use Application\Entity\Group;
 use Zend\Filter\StaticFilter;
 use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\ServiceManagerAwareInterface;
@@ -37,9 +38,14 @@ class ConsumerManager
         $consumer->setLogin($data['login']);
         $consumer->setPassword($data['password']);
         $consumer->setEmail($data['email']);
-        $consumer->setGroupId($data['groupId']);
         $consumer->setExpirationDateTime($data['expirationDateTime']);
-        // dd($consumer);
+
+        $group = $this->entityManager
+            ->getRepository(Group::class)
+            ->find($data['groupId']);
+
+        $consumer->setGroup($group);
+
         // Add the entity to entity manager.
         $this->entityManager->persist($consumer);
 

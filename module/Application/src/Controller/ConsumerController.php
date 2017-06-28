@@ -5,7 +5,10 @@ namespace Application\Controller;
 use Application\Entity\Consumer;
 use Application\Entity\Group;
 use Application\Form\ConsumerForm;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 // use Application\Repository\ConsumerRepository;
@@ -36,12 +39,26 @@ class ConsumerController extends AbstractActionController
      */
     public function indexAction()
     {
-        $consumers = $this->entityManager
+        $params = $this->params()->fromQuery();
+
+        $orderBy = isset($params['orderBy']) ? $params['orderBy'] : 'consumerId';
+        $order = isset($params['order']) ? $params['order'] : 'asc';
+        $page = isset($params['page']) ? $params['page'] : 1;
+        $perPage = isset($params['perPage']) ? $params['perPage'] : 2;
+
+        $query = $this->entityManager
             ->getRepository(Consumer::class)
-            ->findBy([], ['consumerId'=>'ASC']);
+            ->findForPagination([], [$orderBy => $order]);
+
+        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
+        $paginator = new Paginator($adapter);
+        $paginator->setDefaultItemCountPerPage($perPage);
+        $paginator->setCurrentPageNumber($page);
 
         return new ViewModel([
-            'consumers' => $consumers,
+            'consumers' => $paginator,
+            'order' => $order,
+            'orderBy' => $orderBy,
         ]);
     }
 

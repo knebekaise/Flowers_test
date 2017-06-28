@@ -9,6 +9,12 @@ use Application\Entity\Group;
  */
 class GroupRepository extends EntityRepository
 {
+    /**
+     * Get query for pagination with filtering and ordering
+     * @param  array $filter
+     * @param  array $order
+     * @return Doctrine\ORM\Query
+     */
     public function findForPagination($filter, $order)
     {
         $entityManager = $this->getEntityManager();

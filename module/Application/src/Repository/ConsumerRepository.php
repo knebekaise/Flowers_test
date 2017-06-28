@@ -23,19 +23,20 @@ class ConsumerRepository extends EntityRepository
 
         $queryBuilder->select('c')
             ->from(Consumer::class, 'c')
-            ->join('c.group', 'g')
-            ->where('1 = 1');
+            ->join('c.group', 'g');
 
         // Apply filters
         if (!empty($filter)) {
             $paramIndex = 0;
             foreach ($filter as $column => $value) {
-                $paramName = ':param' . $paramIndex;
-                $alias = ($column == 'group') ? 'g' : 'c';
-                $queryBuilder = $queryBuilder
-                    ->andWhere($alias . '.`'. $column . '` = ' . $paramName)
-                    ->setParameter($paramName, $value);
-                $paramIndex++;
+                if (!empty($value)) {
+                    $paramName = ':param' . $paramIndex;
+                    $alias = ($column == 'group') ? 'g' : 'c';
+                    $queryBuilder = $queryBuilder
+                        ->andWhere($alias . '.'. $column . ' = ' . $paramName)
+                        ->setParameter($paramName, $value);
+                    $paramIndex++;
+                }
             }
         }
 

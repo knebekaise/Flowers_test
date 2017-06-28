@@ -6,6 +6,28 @@ if ($order == 'asc') {
 } else {
     $orderClass = 'glyphicon-triangle-top';
 }
+
+$form = $this->form;
+
+$form->setAttributes(['class' => 'form-inline']);
+$form->get('expirationDateTime')->setAttributes([
+        'class'=>'form-control',
+        'placeholder'=>'Enter Expiration Date Time',
+    ]);
+$form->get('groupId')->setAttributes([
+        'class'=>'form-control',
+    ]);
+
+$form->add([
+    'type'  => 'submit',
+    'name' => 'submit',
+    'attributes' => [
+        'value' => 'Search',
+        'class'=>'btn btn-primary'
+    ],
+]);
+
+$form->prepare();
 ?>
 
 <h1>Manage Consumers</h1>
@@ -15,6 +37,28 @@ if ($order == 'asc') {
     <?= $this->url('consumer', ['action'=>'create']); ?>">
     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Consumer
 </a>
+
+
+<div class="row">
+    <?= $this->form()->openTag($form); ?>
+
+    <div class="form-group">
+        <?= $this->formLabel($form->get('expirationDateTime')); ?>
+        <?= $this->formElement($form->get('expirationDateTime')); ?>
+        <?= $this->formElementErrors($form->get('expirationDateTime')); ?>
+    </div>
+
+    <div class="form-group">
+        <?= $this->formLabel($form->get('groupId')); ?>
+        <?= $this->formElement($form->get('groupId')); ?>
+        <?= $this->formElementErrors($form->get('groupId')); ?>
+    </div>
+
+    <?= $this->formElement($form->get('submit')); ?>
+
+    <?= $this->form()->closeTag(); ?>
+</div>
+
 </p>
 
 <table class="table table-striped">
@@ -27,10 +71,10 @@ if ($order == 'asc') {
                     'action' => 'index',
                 ],
                 [
-                    'query' => [
+                    'query' => array_merge($filter, [
                         'orderBy' => 'consumerId',
                         'order' => ($orderBy == 'consumerId' && $order == 'asc') ? 'desc' : 'asc',
-                    ],
+                    ]),
                 ]
             )?>">Consumer ID <?php
                 if ($orderBy == 'consumerId') {
@@ -43,10 +87,10 @@ if ($order == 'asc') {
                     'action' => 'index',
                 ],
                 [
-                    'query' => [
+                    'query' => array_merge($filter, [
                         'orderBy' => 'login',
                         'order' => ($orderBy == 'login' && $order == 'asc') ? 'desc' : 'asc',
-                    ],
+                    ]),
                 ]
             )?>">Login <?php
                 if ($orderBy == 'login') {
@@ -58,10 +102,10 @@ if ($order == 'asc') {
                     'action' => 'index',
                 ],
                 [
-                    'query' => [
+                    'query' => array_merge($filter, [
                         'orderBy' => 'email',
                         'order' => ($orderBy == 'email' && $order == 'asc') ? 'desc' : 'asc',
-                    ],
+                    ]),
                 ]
             )?>">Email <?php
                 if ($orderBy == 'email') {
@@ -73,10 +117,10 @@ if ($order == 'asc') {
                     'action' => 'index',
                 ],
                 [
-                    'query' => [
+                    'query' => array_merge($filter, [
                         'orderBy' => 'expirationDateTime',
                         'order' => ($orderBy == 'expirationDateTime' && $order == 'asc') ? 'desc' : 'asc',
-                    ],
+                    ]),
                 ]
             )?>">Expiration Date Time <?php
                 if ($orderBy == 'expirationDateTime') {
@@ -88,10 +132,10 @@ if ($order == 'asc') {
                     'action' => 'index',
                 ],
                 [
-                    'query' => [
+                    'query' => array_merge($filter, [
                         'orderBy' => 'group',
                         'order' => ($orderBy == 'group' && $order == 'asc') ? 'desc' : 'asc',
-                    ],
+                    ]),
                 ]
             )?>">Group <?php
                 if ($orderBy == 'group') {
@@ -136,10 +180,10 @@ echo $this->paginationControl(
         'action' => 'index',
 
         'force_canonical' => true,
-        'query' => [
+        'query' => array_merge($filter,[
             'orderBy' => $orderBy,
             'order' => $order,
-        ],
+        ]),
     ]
 );
 

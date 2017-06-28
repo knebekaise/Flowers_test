@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Entity\Consumer;
 use Application\Entity\Group;
 use Application\Form\ConsumerForm;
+use Application\Form\ConsumerSearchForm;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -46,9 +47,16 @@ class ConsumerController extends AbstractActionController
         $page = isset($params['page']) ? $params['page'] : 1;
         $perPage = isset($params['perPage']) ? $params['perPage'] : 2;
 
+        $groupRepository = $this->entityManager
+            ->getRepository(Group::class);
+        $form = new ConsumerSearchForm($groupRepository);
+        $form->setData($params);
+
+        $filter = $form->isValid() ? $form->getData() : [];
+
         $query = $this->entityManager
             ->getRepository(Consumer::class)
-            ->findForPagination([], [$orderBy => $order]);
+            ->findForPagination($filter, [$orderBy => $order]);
 
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
@@ -57,8 +65,10 @@ class ConsumerController extends AbstractActionController
 
         return new ViewModel([
             'consumers' => $paginator,
-            'order' => $order,
-            'orderBy' => $orderBy,
+            'order'     => $order,
+            'orderBy'   => $orderBy,
+            'filter'    => $filter,
+            'form'      => $form,
         ]);
     }
 

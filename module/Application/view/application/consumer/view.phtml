@@ -38,10 +38,6 @@ $this->headTitle('View Consumer');
                 <td><?= $this->escapeHtml($consumer->getLogin()) ?></td>
             </tr>
             <tr>
-                <th>Password:</th>
-                <td><?= $this->escapeHtml($consumer->getPassword()) ?></td>
-            </tr>
-            <tr>
                 <th>Group:</th>
                 <td><?= $this->escapeHtml($consumer->getGroup()->getName()) ?></td>
             </tr>

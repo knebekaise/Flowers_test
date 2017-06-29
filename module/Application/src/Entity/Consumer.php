@@ -142,7 +142,7 @@ class Consumer
      */
     public function setPassword($password)
     {
-        $this->password = $password;
+        $this->password = md5($password);
     }
 
     /**

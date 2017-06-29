@@ -11,6 +11,11 @@ $form->get('email')->setAttributes([
         'placeholder'=>'Enter consumer email',
     ]);
 
+$form->get('password')->setAttributes([
+        'class'=>'form-control',
+        'placeholder'=>'Enter consumer password',
+    ]);
+
 $form->get('expirationDateTime')->setAttributes([
         'class'=>'form-control',
         'placeholder'=>'Enter Expiration Date Time',
@@ -40,7 +45,9 @@ $form->prepare();
         </div>
 
         <div class="form-group">
-            <a href="/change-password">Change Password</a>
+            <?= $this->formLabel($form->get('password')); ?>
+            <?= $this->formElement($form->get('password')); ?>
+            <?= $this->formElementErrors($form->get('password')); ?>
         </div>
 
         <div class="form-group">

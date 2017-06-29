@@ -73,6 +73,8 @@ class ConsumerManager
                 $consumer->getAvatarFileName()
             );
         }
+
+        return $consumer;
     }
 
     /**
@@ -87,6 +89,9 @@ class ConsumerManager
         if (!empty($data['avatar']['name'])) {
             $extension = $this->imageManager->getFileExtension($data['avatar']['name']);
             $consumer->setImageExtension($extension);
+        }
+        if (!empty($data['password'])) {
+            $consumer->setPassword($data['password']);
         }
 
         // Apply changes to database.

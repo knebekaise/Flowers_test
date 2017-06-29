@@ -127,7 +127,7 @@ class ConsumerController extends AbstractActionController
                 // Redirect to "view" page
                 return $this->redirect()->toRoute(
                     'consumer',
-                    ['action'=>'index']
+                    ['action'=>'view', 'id' => $consumer->getId()]
                 );
             }
         }

@@ -73,19 +73,18 @@ class ConsumerForm extends Form
             ],
         ]);
 
-        if ($this->scenario == 'create') {
-            // Add "password" field
-            $this->add([
-                'type'  => 'password',
-                'name' => 'password',
-                'attributes' => [
-                    'id' => 'password'
-                ],
-                'options' => [
-                    'label' => 'Consumer Password',
-                ],
-            ]);
-        }
+
+        // Add "password" field
+        $this->add([
+            'type'  => 'password',
+            'name' => 'password',
+            'attributes' => [
+                'id' => 'password'
+            ],
+            'options' => [
+                'label' => 'Consumer Password',
+            ],
+        ]);
 
         // Add "email" field
         $this->add([
@@ -196,7 +195,7 @@ class ConsumerForm extends Form
         if ($this->scenario == 'create') {
             $inputFilter->add([
                 'name'     => 'password',
-                'required' => true,
+                'required' => $this->scenario == 'create',
                 'filters'  => [
                     ['name' => 'StringTrim'],
                     ['name' => 'StripTags'],

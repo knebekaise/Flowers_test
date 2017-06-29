@@ -14,6 +14,18 @@ use Zend\Authentication\Result;
 class AuthAdapter implements AdapterInterface
 {
     /**
+     * Password from configuration.
+     * @var string
+     */
+    private $systemLogin;
+
+    /**
+     * User login from configuration.
+     * @var string
+     */
+    private $systemPassword;
+
+    /**
      * User login.
      * @var string
      */
@@ -24,6 +36,17 @@ class AuthAdapter implements AdapterInterface
      * @var string
      */
     private $password;
+
+    /**
+     * AuthAdapter constructor
+     * @param string $login
+     * @param string $password
+     */
+    public function __construct($login, $password)
+    {
+        $this->systemLogin = $login;
+        $this->systemPassword = $password;
+    }
 
     /**
      * Sets user login.
@@ -46,10 +69,7 @@ class AuthAdapter implements AdapterInterface
      */
     public function authenticate()
     {
-        $login = 'admin';
-        $password = 'password';
-
-        if (($this->login == $login) && ($this->password == $password)) {
+        if (($this->login == $this->systemLogin) && ($this->password == $this->systemPassword)) {
             return new Result(
                     Result::SUCCESS,
                     $this->login,

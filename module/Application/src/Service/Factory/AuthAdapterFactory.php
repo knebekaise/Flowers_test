@@ -17,10 +17,13 @@ class AuthAdapterFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        // Get Doctrine entity manager from Service Manager.
-        $entityManager = $container->get('doctrine.entitymanager.orm_default');
+
+        $config = $container->get('config');
+        if (!(isset($config['auth_data']['login']) && isset($config['auth_data']['password']))) {
+            throw new \Exception('Configuration param "auth_data" info is empty');
+        }
 
         // Create the AuthAdapter and inject dependency to its constructor.
-        return new AuthAdapter($entityManager);
+        return new AuthAdapter($config['auth_data']['login'], $config['auth_data']['password']);
     }
 }

@@ -27,4 +27,8 @@ return [
             ],
         ],
     ],
+    'auth_data' => [
+        'login' => 'admin',
+        'password' => 'password',
+    ],
 ];

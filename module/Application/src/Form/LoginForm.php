@@ -45,7 +45,7 @@ class LoginForm extends Form
 
         // Add "password" field
         $this->add([
-            'type'  => 'text',
+            'type'  => 'password',
             'name' => 'password',
             'attributes' => [
                 'id' => 'password'

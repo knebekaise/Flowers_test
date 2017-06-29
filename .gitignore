@@ -4,5 +4,6 @@ config/development.config.php
 config/local.php
 data/cache/*
 data/avatars/*
+data/DoctrineORMModule/*
 !data/cache/.gitkeep
 phpunit.xml
